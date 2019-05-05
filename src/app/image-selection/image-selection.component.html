@@ -1,3 +1,21 @@
-<p>
-  image-selection works!
-</p>
+<form [class.flyout]="test" (transitionend)="endAnimate($event)">
+    <ul>
+        <li>
+            <label for="firstName">first name</label>
+            <input name="firstName" type="text" [value]="user.firstName">
+        </li>
+        <li>
+            <label for="secondName">second name</label>
+            <input name="secondName" type="text">
+        </li>
+        <li>
+            <label for="age">age</label>
+            <input name="age" type="text">
+        </li>
+    </ul>
+    <button>submit</button>
+</form>
+<button (click)="state = 'empty'">empty</button>
+<button (click)="state = 'full'">full</button>
+<button (click)="test = !test">my way</button>
+<button (click)="sum(num)">huh</button>

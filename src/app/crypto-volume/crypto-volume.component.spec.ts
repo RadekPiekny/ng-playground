@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageSelectionComponent } from './image-selection.component';
+import { CryptoVolumeComponent } from './crypto-volume.component';
 
-describe('ImageSelectionComponent', () => {
-  let component: ImageSelectionComponent;
-  let fixture: ComponentFixture<ImageSelectionComponent>;
+describe('CryptoVolumeComponent', () => {
+  let component: CryptoVolumeComponent;
+  let fixture: ComponentFixture<CryptoVolumeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImageSelectionComponent ]
+      declarations: [ CryptoVolumeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImageSelectionComponent);
+    fixture = TestBed.createComponent(CryptoVolumeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

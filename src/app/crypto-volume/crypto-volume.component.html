@@ -1,0 +1,7 @@
+<button (click)="getData()">get crypto data</button>
+<button (click)="test = '1px'">fit to screen</button>
+<!-- <div *ngFor="let item of data">{{item.volume | currency:'USD':'symbol'}}</div> -->
+{{highest}}
+<figure>
+<div *ngFor="let vol of dataVolume" [style.min-width]="test" [style.height]="(vol / highest * 100) + '%'"></div>
+</figure>

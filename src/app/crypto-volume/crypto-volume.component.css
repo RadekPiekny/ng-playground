@@ -1,0 +1,12 @@
+figure {
+    display: flex;
+    height: 700px;
+    background: black;
+    align-items: flex-end;
+    overflow-x: scroll;
+}
+figure div {
+    background: sandybrown;
+    margin: 1px;
+    transition: all 1s ease;
+}

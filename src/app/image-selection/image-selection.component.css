@@ -1,0 +1,30 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+form {
+    transition: transform 300ms ease;
+}
+ul {
+    list-style: none;
+}
+li {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+}
+input{
+    padding: 0.5rem;
+}
+input[type=submit] {
+    padding:5px 15px; 
+    background:#ccc; 
+    border:0 none;
+    cursor:pointer;
+    border-radius: 5px; 
+}
+.flyout {
+    transform: translateX(100px);
+}
