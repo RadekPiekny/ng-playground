@@ -8,25 +8,31 @@ import { Observable, Subscription, Observer } from 'rxjs';
 })
 export class ObservableTestComponent implements OnInit {
   observable: Observable<string>;
-  observer: Observer<string>;
+  observer: Observer<number>;
   subscription: Subscription;
   
   data: Observable<number>;
   values: Array<number> = [];
   rndNumber: number;
+  rndNumberWatch: Observable<number>;
   constructor() { }
 
   ngOnInit() {
-    //this.streamValues(2000);
-    this.observable = new Observable((observer: Observer<string>) => {
-      this.observer = observer;
+    this.streamValues(2000);
+    this.rndNumberWatch = new Observable((observer: Observer<number>) => {
+      setTimeout(() => {
+        observer.next(8);
+      }, 8000);
+      setTimeout(() => {
+        observer.next(3);
+      }, 3000);
     });
 
-    this.observable.subscribe(this.handleData, this.handleError , this.handleComplete);
-    this.observer.next('12');
-    this.observer.next('15');
-    this.observer.complete();
-    this.observer.next('16');
+    this.rndNumberWatch.subscribe(
+      data => console.log('new value emited: ' + data),
+      e => console.log('something is wrong' + e),
+      () => console.log('it is finished')
+    );
   }
 
   randomGenerator() {
@@ -38,7 +44,7 @@ export class ObservableTestComponent implements OnInit {
     return parseFloat(rnd.toFixed(2));
   }
 
-  streamValues(delay: number) {
+  streamValues(delay: number): number {
     let d: number;
     d = this.randomInt(3000,5000);
     setTimeout(() => {
@@ -48,19 +54,6 @@ export class ObservableTestComponent implements OnInit {
       this.rndNumber = this.randomInt(0,1);
       this.streamValues(d);
     }, delay);
-  }
-
-  handleData(data) {
-    console.log('Here are the usable data', data);
-    // Insert Business logic here
-  }
-
-  handleComplete() {
-    console.log('Complete');
-  }
-
-  handleError(error) {
-    console.log('error:', error)
-    return Observable.throw(error);
+    return this.rndNumber;
   }
 }
