@@ -11,6 +11,8 @@ import { CryptoVolumeComponent } from './crypto-volume/crypto-volume.component';
 import { ThreeJSComponent } from './three-js/three-js.component';
 import { LoadingComponent } from './loading/loading.component';
 import { ObservableTestComponent } from './observable-test/observable-test.component';
+import { LightDarkModeComponent } from './light-dark-mode/light-dark-mode.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({
@@ -21,7 +23,9 @@ import { ObservableTestComponent } from './observable-test/observable-test.compo
     CryptoVolumeComponent,
     ThreeJSComponent,
     LoadingComponent,
-    ObservableTestComponent
+    ObservableTestComponent,
+    LightDarkModeComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

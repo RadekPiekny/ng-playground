@@ -49,7 +49,7 @@ export class CryptoVolumeComponent implements OnInit {
 
   getBarWidth(): void {
     if (this.test == '5px') {
-      this.test = '2px';
+      this.test = '1px';
       return;
     }
     this.test = '5px';

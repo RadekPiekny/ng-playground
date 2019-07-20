@@ -6,5 +6,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'ng-playground';
+  darkMode: boolean;
+  changeMode(darkMode: boolean) {
+    this.darkMode = darkMode;
+  }
+
+  getTheme(): string {
+    if (this.darkMode) {
+      return 'dark';
+    }
+    return 'light';
+  }
 }

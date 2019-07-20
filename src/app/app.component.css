@@ -1,0 +1,35 @@
+nav {
+    height: var(--nav-height);
+    display: flex;
+    background-color: var(--Nav-BG-Color);
+    overflow: hidden;
+    color: var(--Font-Color);
+}
+nav ul {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    height: 100%;
+}
+nav ul li {
+    white-space: nowrap;
+    height: 100%;
+    display: flex;
+    padding: 0 1rem;
+}
+nav ul li a {
+    color:inherit;
+    text-decoration: none;
+    margin: auto;
+}
+main {
+    min-height: calc(100vh - var(--nav-height));
+    transition: background-color .3s ease;
+    background-color: var(--Main-BG-Color);
+    color: var(--Font-Color);
+}
+.active {
+    background-color: var(--Nav-BG-Active);
+}

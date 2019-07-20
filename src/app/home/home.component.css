@@ -1,0 +1,10 @@
+:host {
+    min-height: 100vh;
+    display: flex;
+}
+main {
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    background: papayawhip;
+}

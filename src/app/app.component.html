@@ -1,9 +1,26 @@
-<nav>
-  <a routerLink="/bla" routerLinkActive="active">image selection</a>
-  <a routerLink="/path" routerLinkActive="active">path</a>
-  <a routerLink="/crypto" routerLinkActive="active">crypto</a>
-  <a routerLink="/threeJS" routerLinkActive="active">threeJS</a>
-  <a routerLink="/loading" routerLinkActive="active">loading</a>
-  <a routerLink="/observable" routerLinkActive="active">observable</a>
+<nav [attr.data-theme]="getTheme()">
+  <ul>
+    <li routerLinkActive="active">
+        <a routerLink="/bla" >image selection</a>
+    </li>
+    <li routerLinkActive="active">
+        <a routerLink="/path">path</a>
+    </li>
+    <li routerLinkActive="active">
+        <a routerLink="/crypto">crypto</a>
+    </li>
+    <li routerLinkActive="active">
+        <a routerLink="/threeJS">threeJS</a>
+    </li>
+    <li routerLinkActive="active">
+        <a routerLink="/loading">loading</a>
+    </li>
+    <li routerLinkActive="active">
+        <a routerLink="/observable">observable</a>
+    </li>
+  </ul>
+  <light-dark-mode (_darkMode)="changeMode($event)"></light-dark-mode>
 </nav>
-<router-outlet></router-outlet>
+<main [attr.data-theme]="getTheme()">
+  <router-outlet></router-outlet>
+</main>

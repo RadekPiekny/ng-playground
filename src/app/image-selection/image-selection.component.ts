@@ -25,7 +25,7 @@ import {
       ]),
       transition('* => *', [
         query('label', style({ opacity: 1 })),
-        query('label', animate(1000, style({ transform: 'translateX(100px)' })))
+        query('label', animate(1000, style({ left: '200px' })))
       ]),
     ])
   ]

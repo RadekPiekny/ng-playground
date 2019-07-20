@@ -28,7 +28,7 @@ export class ObservableTestComponent implements OnInit {
       }, 3000);
     });
 
-    this.rndNumberWatch.subscribe(
+    this.subscription = this.rndNumberWatch.subscribe(
       data => console.log('new value emited: ' + data),
       e => console.log('something is wrong' + e),
       () => console.log('it is finished')

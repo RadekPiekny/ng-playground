@@ -1,12 +1,12 @@
 figure {
     display: flex;
     height: 700px;
-    background: black;
+    background: var(--Main-BG-Color);
     align-items: flex-end;
     overflow-x: scroll;
 }
 figure div {
     background: sandybrown;
-    margin: 1px;
+    margin: 0;
     transition: all 300ms ease;
 }
