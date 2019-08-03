@@ -13,6 +13,7 @@ import { LoadingComponent } from './loading/loading.component';
 import { ObservableTestComponent } from './observable-test/observable-test.component';
 import { LightDarkModeComponent } from './light-dark-mode/light-dark-mode.component';
 import { HomeComponent } from './home/home.component';
+import { RangeSliderComponent } from './range-slider/range-slider.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { HomeComponent } from './home/home.component';
     LoadingComponent,
     ObservableTestComponent,
     LightDarkModeComponent,
-    HomeComponent
+    HomeComponent,
+    RangeSliderComponent
   ],
   imports: [
     BrowserModule,

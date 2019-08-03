@@ -8,6 +8,7 @@ import { LoadingComponent } from './loading/loading.component';
 import { ObservableTestComponent } from './observable-test/observable-test.component';
 import { LightDarkModeComponent } from './light-dark-mode/light-dark-mode.component';
 import { HomeComponent } from './home/home.component';
+import { RangeSliderComponent } from './range-slider/range-slider.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'threeJS', component: ThreeJSComponent },
   { path: 'loading', component: LoadingComponent },
   { path: 'observable', component: ObservableTestComponent },
-  { path: 'light-dark-mode', component: LightDarkModeComponent }
+  { path: 'light-dark-mode', component: LightDarkModeComponent },
+  { path: 'range-slider', component: RangeSliderComponent }
 ];
 
 @NgModule({

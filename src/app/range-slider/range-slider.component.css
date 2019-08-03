@@ -1,0 +1,48 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    --height-block: 3rem;
+    --track-height: 0.1rem;
+}
+.wrapper {
+    display: block;
+    width: 100%;
+    display: flex;
+}
+.track-container {
+    display: flex;
+    flex: 1;
+    position: relative;
+}
+.block {
+    height: var(--height-block);
+    width: var(--height-block);
+    display: flex;
+}
+.block span {
+    margin: auto;
+}
+.thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.track {
+    position: absolute;
+    height: var(--track-height);
+    top: calc(var(--height-block) / 2 - var(--track-height) / 2);
+    width: calc(100% - 2 * var(--height-block));
+    left: calc(var(--height-block) / 2);
+    background-color: rgb(179, 179, 179);
+}
+.from-to {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: blueviolet;
+    width: 39px;
+}
