@@ -2,14 +2,15 @@
   <div class="block">
     <span>0</span>
   </div>
-  <div class="track-container">
-    <div class="track">
+  <div #trackContainerEl class="track-container">
+    <div #track class="track">
       <div class="from-to"></div>
     </div>
-    <div class="block thumb"></div>
-    <div class="block thumb"></div>
+    <div #thumbMinEl class="block thumb"></div>
+    <div #thumbMaxEl class="block thumb" [ngStyle]="getThumbMaxStyle()"></div>
   </div>
   <div class="block">
     <span>100</span>
   </div>
 </div>
+<div *ngIf="active" class="overlay" (mouseup)="deactivate()" (mousemove)="valueChange($event)"></div>

@@ -7,7 +7,7 @@ import * as THREE from 'three';
   styleUrls: ['./three-js.component.css']
 })
 export class ThreeJSComponent implements OnInit {
-  @ViewChild('canvas') canvas: HTMLCanvasElement;
+  @ViewChild('canvas', { static: true }) canvas: HTMLCanvasElement;
   renderer = new THREE.WebGLRenderer();
   scene = new THREE.Scene();
   geometry = new THREE.BoxGeometry( 1, 1, 1 );
