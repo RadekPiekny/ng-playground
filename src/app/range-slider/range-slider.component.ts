@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Output } from '@angular/core';
 import { Observable, Subscription, fromEvent } from 'rxjs';
 
 @Component({
@@ -7,10 +7,17 @@ import { Observable, Subscription, fromEvent } from 'rxjs';
   styleUrls: ['./range-slider.component.css']
 })
 export class RangeSliderComponent implements OnInit {
+  @Input() minValue: number = 0;
+  @Input() maxValue: number = 1;
+  @Input() decimalPlaces: number = 3;
+  @Output() valueFrom: number;
+  @Output() valueTo: number;
   subscription: Subscription[] = [];
   thumbGrapPosition: number;
   trackContainerLeft: number;
   trackContainerWidth: number;
+  progressWidth: number
+  progressStep: number;
   active: boolean = false;
   @ViewChild('thumbMinEl', { static: true }) thumbMinEl: ElementRef<HTMLDivElement>;
   @ViewChild('thumbMaxEl', { static: true }) thumbMaxEl: ElementRef<HTMLDivElement>;
@@ -61,6 +68,10 @@ export class RangeSliderComponent implements OnInit {
     this.thumbMax.left = this.thumbMaxEl.nativeElement.getBoundingClientRect().left - this.trackContainerLeft;
     this.thumbMax.width = this.thumbMaxEl.nativeElement.getBoundingClientRect().width;
     this.thumbMax.top = this.thumbMaxEl.nativeElement.getBoundingClientRect().top;
+
+    this.progressWidth = this.trackContainerWidth - this.thumbMin.width;
+    this.progressStep = this.progressWidth / this.maxValue;
+
   }
 
   deactivate() {
@@ -71,45 +82,148 @@ export class RangeSliderComponent implements OnInit {
 
   valueChange(e: MouseEvent) {
     if (this.thumbMin.active) {
-      this.thumbMinSliding(e.clientX);
+      this.thumbMinStepping(e.clientX);
     }
     if (this.thumbMax.active) {
-      this.thumbMaxSliding(e.clientX);
+      this.thumbMaxStepping(e.clientX);
     }
   }
 
   thumbMinSliding(clientX: number) {
-    if (clientX < this.trackContainerLeft) {
-      return;
+    if (clientX - this.thumbGrapPosition< this.trackContainerLeft) {
+      this.thumbMin.left = 0;
+    } else if (clientX - this.trackContainerLeft - this.thumbGrapPosition > this.thumbMax.left) {
+      this.thumbMin.left = this.thumbMax.left;
+    } else {
+      this.thumbMin.left = clientX - this.trackContainerLeft - this.thumbGrapPosition;
     }
-    if (clientX > this.thumbMax.left) {
-      return;
-    }
-    this.thumbMin.left = clientX;
+    let val: number = (this.thumbMin.left / (this.trackContainerWidth - this.thumbMin.width)) * this.maxValue;
+    val = parseFloat(val.toFixed(2));
+    this.valueFrom = val;
   }
 
   thumbMaxSliding(clientX: number) {
     if (clientX - this.trackContainerLeft - this.thumbGrapPosition > this.trackContainerWidth - this.thumbMax.width) {
       this.thumbMax.left = this.trackContainerWidth - this.thumbMax.width;
-      return;
-    }
-    if (clientX - this.trackContainerLeft - this.thumbGrapPosition< this.thumbMin.left) {
+    } else if (clientX - this.trackContainerLeft - this.thumbGrapPosition< this.thumbMin.left) {
       this.thumbMax.left = this.thumbMin.left;
+    } else {
+      this.thumbMax.left = clientX - this.trackContainerLeft - this.thumbGrapPosition;
+    }
+    let val: number = (this.thumbMax.left / (this.trackContainerWidth - this.thumbMax.width)) * this.maxValue;
+    val = parseFloat(val.toFixed(2));
+    this.valueTo = val;
+  }
+
+  thumbMinStepping(clientX: number) {
+    let futureValue: number = (clientX - this.trackContainerLeft - this.thumbGrapPosition) / this.progressStep;
+    futureValue = parseFloat(futureValue.toFixed(this.decimalPlaces));
+    if (futureValue < this.minValue) {
+      this.thumbMin.left = 0;
+      this.valueFrom = this.minValue;
       return;
     }
-    this.thumbMax.left = clientX - this.trackContainerLeft - this.thumbGrapPosition;
+    if (futureValue > this.valueTo) {
+      this.thumbMax.left = this.thumbMax.left;
+      this.valueFrom = this.valueTo;
+      return;
+    }
+    this.thumbMin.left = futureValue * this.progressStep;
+    this.valueFrom = futureValue;
+  }
+
+  thumbMaxStepping(clientX: number) {
+    let futureValue: number = (clientX - this.trackContainerLeft - this.thumbGrapPosition) / this.progressStep;
+    futureValue = parseFloat(futureValue.toFixed(this.decimalPlaces));
+    if (futureValue > this.maxValue) {
+      this.thumbMax.left = this.trackContainerWidth - this.thumbMax.width;
+      this.valueTo = this.maxValue;
+      return
+    }
+    if (futureValue < this.valueFrom) {
+      this.thumbMax.left = this.thumbMin.left;
+      this.valueTo = this.valueFrom;
+      return;
+    }
+    this.thumbMax.left = futureValue * this.progressStep;
+    this.valueTo = futureValue;
   }
 
   getThumbMaxStyle(): Object {
+    if (this.active) {
+      return {
+        'transform': 'translateX(' + this.thumbMax.left + 'px)',
+        'background-color': 'rgba(255, 255, 255, 0.1)'
+      };
+    }
     return {
-      'transform': 'translateX(' + this.thumbMax.left + 'px)'
+      'transform': 'translateX(' + this.thumbMax.left + 'px)',
+      'background-color': 'transparent'
+    };
+  }
+
+  getThumbMinStyle(): Object {
+    if (this.active) {
+      return {
+        'transform': 'translateX(' + this.thumbMin.left + 'px)',
+        'background-color': 'rgba(255, 255, 255, 0.1)'
+      };
+    }
+    return {
+      'transform': 'translateX(' + this.thumbMin.left + 'px)',
+      'background-color': 'transparent'
+    };
+  }
+
+  getFromtToStyle():Object {
+    return {
+      'transform': 'translateX(' + this.thumbMin.left + 'px)',
+      'width': (this.thumbMax.left - this.thumbMin.left) + 'px'
     };
   }
 
   ngOnDestroy(): void {
     this.subscription.forEach(s => {
       s.unsubscribe;
-    })  
+    })
+  }
+
+  shrinkThumb(): Object {
+    let diff: number = this.thumbMax.left - this.thumbMin.left;
+    if (diff > this.thumbMin.width) {
+      return {
+        "width": "12px",
+        "height": "12px"
+      }
+    }
+    let size: number = 1 + (diff / this.thumbMin.width) * 11
+    if (size < 6) {
+      size = 0;
+    }
+    return {
+      "width": size + "px",
+      "height": size + "px"
+    }
+  }
+
+  minValueTextPosition(): Object {
+    let diff: number = this.thumbMax.left - this.thumbMin.left;
+    if (diff < this.thumbMin.width) {
+      let translate: number = (this.thumbMin.width - diff) * -1;
+      return {
+        "transform": "translateX(" + translate + "px)"
+      }
+    }
+  }
+
+  maxValueTextPosition(): Object {
+    let diff: number = this.thumbMax.left - this.thumbMin.left;
+    if (diff < this.thumbMax.width) {
+      let translate: number = this.thumbMin.width - diff;
+      return {
+        "transform": "translateX(" + translate + "px)"
+      }
+    }
   }
 
 }

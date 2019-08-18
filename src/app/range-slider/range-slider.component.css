@@ -4,7 +4,8 @@
     justify-content: center;
     align-items: center;
     --height-block: 3rem;
-    --track-height: 0.1rem;
+    --track-height: 3px;
+    overflow: hidden;
 }
 .wrapper {
     display: block;
@@ -16,18 +17,44 @@
     display: flex;
     flex: 1;
     position: relative;
+    align-items: center;
+    height: var(--height-block);
 }
 .block {
     height: var(--height-block);
     width: var(--height-block);
     display: flex;
+    font-size: 0.75rem;
 }
-.block span {
-    margin: auto;
+.values {
+    position: absolute;
+    justify-content: center;
+    align-items: flex-end;
+}
+.to {
+    left: calc(100% - var(--height-block));
 }
 .thumb {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
     position: absolute;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    cursor: grab;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    transition: background-color .3s ease;
+}
+.thumb div {
+    border-radius: 50%;
+    background-color: blueviolet;
+}
+.thumb span {
+    position: absolute;
+    font-size: 0.75rem;
+    width: 100%;
+    text-align: center;
     top: 0;
     left: 0;
 }
@@ -35,17 +62,14 @@
     position: absolute;
     height: var(--track-height);
     top: calc(var(--height-block) / 2 - var(--track-height) / 2);
-    width: calc(100% - 2 * var(--height-block));
+    width: calc(100% - var(--height-block));
     left: calc(var(--height-block) / 2);
     background-color: rgb(179, 179, 179);
 }
 .from-to {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: blueviolet;
-    width: 39px;
+    height: var(--track-height);
+    background-color: rgb(138, 43, 226);
+    margin-left: calc(var(--height-block) / 2);
 }
 .overlay {
     position: fixed;

@@ -1,6 +1,8 @@
 <svg width="500" height="500" viewBox="0 0 500 500">
 
   <path [attr.d]="getPoints()" stroke="black" stroke-width="1" fill="transparent"/>
-
+  <path [attr.d]="getMirrorPoints()" stroke="red" stroke-width="1" fill="transparent"/>
+  <ng-container *ngFor="let point of interSection">
+    <circle [attr.cx]="point.x" [attr.cy]="point.y" r="22" fill="rgba(0,0,0,0.3)" />
+  </ng-container>
 </svg>
-{{testPoint.y}}

@@ -9,6 +9,7 @@ import { ObservableTestComponent } from './observable-test/observable-test.compo
 import { LightDarkModeComponent } from './light-dark-mode/light-dark-mode.component';
 import { HomeComponent } from './home/home.component';
 import { RangeSliderComponent } from './range-slider/range-slider.component';
+import { AngleShapeComponent } from './angle-shape/angle-shape.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,7 +20,8 @@ const routes: Routes = [
   { path: 'loading', component: LoadingComponent },
   { path: 'observable', component: ObservableTestComponent },
   { path: 'light-dark-mode', component: LightDarkModeComponent },
-  { path: 'range-slider', component: RangeSliderComponent }
+  { path: 'range-slider', component: RangeSliderComponent },
+  { path: 'angle-shape', component: AngleShapeComponent }
 ];
 
 @NgModule({

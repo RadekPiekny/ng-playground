@@ -1,0 +1,38 @@
+:host {
+    overflow: hidden;
+    min-height: 100%;
+    display: flex;
+    height: calc(100vh - var(--nav-height));
+}
+.wrapper {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    --ratio: 0.27;
+    --zik-zak-diff: 20px;
+}
+.item {
+    position: relative;
+    width: 100px;
+    height: 200px;
+    transform: skew(-15deg);
+    background-color: tomato;
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.3);
+    transition: transform .3s ease-in-out, box-shadow .3s ease-in-out, ;
+    display: flex;
+}
+.item span {
+    margin: auto;
+    text-align: center;
+}
+.item:nth-child(odd) {
+    transform: translate(calc(var(--ratio) * -1 * var(--zik-zak-diff)), var(--zik-zak-diff)) skew(-15deg);
+}
+.item:hover {
+    background-color: blueviolet;
+    z-index: 20;
+    box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.3);
+    transform: skew(-15deg) scale(1.1);
+}

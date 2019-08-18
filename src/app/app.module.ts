@@ -14,6 +14,7 @@ import { ObservableTestComponent } from './observable-test/observable-test.compo
 import { LightDarkModeComponent } from './light-dark-mode/light-dark-mode.component';
 import { HomeComponent } from './home/home.component';
 import { RangeSliderComponent } from './range-slider/range-slider.component';
+import { AngleShapeComponent } from './angle-shape/angle-shape.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { RangeSliderComponent } from './range-slider/range-slider.component';
     ObservableTestComponent,
     LightDarkModeComponent,
     HomeComponent,
-    RangeSliderComponent
+    RangeSliderComponent,
+    AngleShapeComponent
   ],
   imports: [
     BrowserModule,
