@@ -114,6 +114,8 @@ export class PathtestComponent implements OnInit {
 
   }
 
+
+
   getIntersections() {
 
     for (let index = 0; index < 3; index += 3) {
@@ -129,8 +131,6 @@ export class PathtestComponent implements OnInit {
       )
       this.interSection.push(linesIntersection);
     }
-
-
   }
 }
 

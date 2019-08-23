@@ -15,6 +15,8 @@ import { LightDarkModeComponent } from './light-dark-mode/light-dark-mode.compon
 import { HomeComponent } from './home/home.component';
 import { RangeSliderComponent } from './range-slider/range-slider.component';
 import { AngleShapeComponent } from './angle-shape/angle-shape.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AbscissaLineConvertorComponent } from './abscissa-line-convertor/abscissa-line-convertor.component';
 
 
 @NgModule({
@@ -29,13 +31,15 @@ import { AngleShapeComponent } from './angle-shape/angle-shape.component';
     LightDarkModeComponent,
     HomeComponent,
     RangeSliderComponent,
-    AngleShapeComponent
+    AngleShapeComponent,
+    AbscissaLineConvertorComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

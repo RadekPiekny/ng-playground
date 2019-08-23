@@ -10,6 +10,7 @@ import { LightDarkModeComponent } from './light-dark-mode/light-dark-mode.compon
 import { HomeComponent } from './home/home.component';
 import { RangeSliderComponent } from './range-slider/range-slider.component';
 import { AngleShapeComponent } from './angle-shape/angle-shape.component';
+import { AbscissaLineConvertorComponent } from './abscissa-line-convertor/abscissa-line-convertor.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'observable', component: ObservableTestComponent },
   { path: 'light-dark-mode', component: LightDarkModeComponent },
   { path: 'range-slider', component: RangeSliderComponent },
-  { path: 'angle-shape', component: AngleShapeComponent }
+  { path: 'angle-shape', component: AngleShapeComponent },
+  { path: 'abscissa-line-convertor', component: AbscissaLineConvertorComponent }
 ];
 
 @NgModule({
