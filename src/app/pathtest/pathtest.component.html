@@ -1,8 +1,11 @@
 <svg width="500" height="500" viewBox="0 0 500 500">
 
-  <path [attr.d]="getPoints()" stroke="black" stroke-width="1" fill="transparent"/>
-  <path [attr.d]="getMirrorPoints()" stroke="red" stroke-width="1" fill="transparent"/>
-  <ng-container *ngFor="let point of interSection">
-    <circle [attr.cx]="point.x" [attr.cy]="point.y" r="22" fill="rgba(0,0,0,0.3)" />
+  <path [attr.d]="getPoints(points)" stroke="black" stroke-width="1" fill="transparent"/>
+  <!-- <path [attr.d]="getPoints(testLines)" stroke="rgba(0,0,0,0.2)" stroke-width="10" fill="transparent"/> -->
+  <ng-container *ngFor="let line of mirrorLines">
+    <path [attr.d]="getLine(line)" stroke="red" stroke-width="1" fill="transparent"/>
   </ng-container>
-</svg> 
+  <ng-container *ngFor="let point of interSection">
+    <circle [attr.cx]="point.x" [attr.cy]="point.y" r="10" fill="rgba(0,0,0,0.3)" />
+  </ng-container>
+</svg>

@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./abscissa-line-convertor.component.css']
 })
 export class AbscissaLineConvertorComponent implements OnInit {
+  viewBoxWidth: number = 100;
+  viewBoxHeight: number = 100;
   originalP1: Point = new Point;
   originalP2: Point = new Point;
   originalLine: Line = new Line;
@@ -14,51 +16,66 @@ export class AbscissaLineConvertorComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.originalP1.x = 20;
-    this.originalP1.y = 30;
-    this.originalP2.x = 60;
-    this.originalP2.y = 70;
+    this.originalP1.x = 95;
+    this.originalP1.y = 91;
+    this.originalP2.x = 90;
+    this.originalP2.y = 88;
 
     this.originalLine.p1 = this.originalP1;
     this.originalLine.p2 = this.originalP2;
-    this.newLine = this.abscissaToLine(this.originalLine,100,100);
+    this.newLine = this.extendAbscissa(this.originalLine,100,100);
   }
 
-  abscissaToLine(line: Line, viewBoxHeight: number, viewBoxWidth: number): Line {
-    let newP1: Point = new Point;
-    let newP2: Point = new Point;
+  intersect(l1:Line, l2:Line): Point {
+    if ((l1.p1.x === l1.p2.x && l1.p2.x === l1.p2.x) || (l2.p1.x === l2.p2.x && l2.p2.x === l2.p2.x)) {
+      return null
+    }
+    let denominator = ((l2.p2.y - l2.p1.y) * (l1.p2.x - l1.p1.x) - (l2.p2.x - l2.p1.x) * (l1.p2.y - l1.p1.y))
+    if (denominator === 0) {
+      return null
+    }
+    let ua = ((l2.p2.x - l2.p1.x) * (l1.p1.x - l2.p1.y) - (l2.p2.y - l2.p1.y) * (l1.p1.x - l2.p1.x)) / denominator
+    let ub = ((l2.p2.x - l2.p1.x) * (l1.p1.y - l2.p1.y) - (l1.p2.y - l1.p1.y) * (l1.p1.x - l2.p1.x)) / denominator
+    if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
+      return null
+    }
+    let x = l1.p1.x + ua * (l1.p2.x - l1.p1.x)
+    let y = l1.p1.y + ua * (l1.p2.y - l1.p1.y)
+    return {x, y}
+  }
+
+  extendAbscissa(line: Line, viewBoxHeight: number, viewBoxWidth: number): Line {
     let newLine: Line = new Line;
+    let a: number = line.p2.y - line.p1.y;
+    let b: number = line.p2.x - line.p1.x;
+    let c: number = Math.sqrt(Math.pow(a,2) + Math.pow(b,2));
+    let cossinus: number = a / c;
+    let sinus: number = b / c;
 
-    if (line.p2.y == line.p1.y && line.p2.x == line.p1.x) {
-      throw new Error('It is a point dude not an abscissa...');
-    }
+    let newA: number;
+    let newC: number;
+    let newB: number;
 
-    if (line.p2.y == line.p1.y) {
-      newLine.p1.x = 0;
-      newLine.p1.y = line.p1.y;
-      newLine.p2.x = viewBoxWidth;
-      newLine.p2.y = line.p2.y;
-      return newLine;
-    }
+    newA = line.p1.y;
+    newC = newA / cossinus;
+    newB = newC * sinus;
+    newLine.p1.x = line.p1.x - newB;
+    newLine.p1.y = 0;
 
-    if (line.p2.x == line.p1.x) {
-      newLine.p1.x = line.p1.x;
-      newLine.p1.y = 0;
-      newLine.p2.x = line.p2.x;
-      newLine.p2.y = viewBoxHeight;
-      return newLine;
-    }
-
-    let ratioWidthtoHeight: number = (line.p2.x - line.p1.x) / (line.p2.y - line.p1.y);
-    let ratioToLeft: number = (viewBoxHeight - line.p1.y) / (line.p2.y - line.p1.y);
-    newP1.x = line.p1.x - Math.abs((viewBoxHeight - line.p1.y) / ratioToLeft * ratioWidthtoHeight);
-    newP2.x = line.p2.x + Math.abs((viewBoxHeight - line.p2.y) / ratioToLeft * ratioWidthtoHeight);
-    newP1.y = line.p1.y - (viewBoxWidth - line.p1.x) / ratioToLeft * ratioWidthtoHeight;
-    newP2.y = line.p2.y - (viewBoxWidth - line.p2.x) / ratioToLeft * ratioWidthtoHeight;
-    newLine.p1 = newP1;
-    newLine.p2 = newP2;
+    newA = viewBoxHeight - line.p1.y;
+    newC = newA / cossinus;
+    newB = newC * sinus;
+    newLine.p2.x = line.p1.x + newB;
+    newLine.p2.y = viewBoxHeight;
     return newLine;
+  }
 
+  convertRadToDegree(rad: number) {
+    return rad * 180 / Math.PI;
+  }
+
+  convertDegreeToRad(degree: number) {
+    return degree * Math.PI / 180;
   }
 
 }
