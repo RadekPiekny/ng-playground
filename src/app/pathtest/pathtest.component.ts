@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class PathtestComponent implements OnInit {
   points: Point[] = [
     { x:80, y: 150 },
+    { x:120, y: 220 },
     { x:350, y: 300 },
     { x:350, y: 350 },
     { x:480, y: 480 }
@@ -23,24 +24,28 @@ export class PathtestComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.stepDiffWidth = ( this.startWidth - this.endWidth) / (this.points.length - 1);
-    this.points.forEach((p,i) => {
-      p.width = this.startWidth - this.stepDiffWidth * i;
-    })
+    this.interSection = this.getNarrowingLine(this.points,this.startWidth,this.endWidth);
+    this.points.push(...this.interSection)
+  }
 
+  getNarrowingLine(line:Point[],startWidth:number = 20,endWidth:number = 0):Point[] {
+    let stepDiffWidth: number = ( startWidth - endWidth) / (this.points.length - 1);
+    line.forEach((p,i) => {
+      p.width = this.startWidth - stepDiffWidth * i;
+    });
 
-    for (let index = this.points.length-1; index > 0; index--) {
-      console.log(index);
-      let newLine: Line = new Line;
-      newLine.p1 = this.points[index];
-      newLine.p2 = this.points[index - 1];
-      this.mirrorLine(newLine)
+    for (let index = line.length-1; index > 0; index--) {
+      let newMirrorLine: Line = new Line;
+      newMirrorLine.p1 = this.points[index];
+      newMirrorLine.p2 = this.points[index - 1];
+      this.mirrorLine(newMirrorLine)
     }
-    this.getIntersections();
-    let firstLine: Line = new Line();
-    firstLine.p1 = this.points[1];
-    firstLine.p2 = this.points[0];
-    this.interSection.push(this.find90degToLine(firstLine, this.points[0].width));
+    let firstLinePart: Line = new Line();
+    firstLinePart.p1 = line[1];
+    firstLinePart.p2 = line[0];
+
+    let newLine: Point[] = this.getReturnPoints(this.mirrorLines,firstLinePart);
+    return newLine;
   }
 
   getPoints(points: Point[]):string {
@@ -67,32 +72,21 @@ export class PathtestComponent implements OnInit {
     return finalString;
   }
 
-  interdsect(x1, y1, x2, y2, x3, y3, x4, y4): Point {
-
-    // Check if none of the lines are of length 0
-    if ((x1 === x2 && y1 === y2) || (x3 === x4 && y3 === y4)) {
+  intersect(l1:Line, l2:Line): Point {
+    if ((l1.p1.x === l1.p2.x && l1.p2.x === l1.p2.x) || (l2.p1.x === l2.p2.x && l2.p2.x === l2.p2.x)) {
       return null
     }
-
-    let denominator = ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1))
-
-    // Lines are parallel
+    let denominator = ((l2.p2.y - l2.p1.y) * (l1.p2.x - l1.p1.x) - (l2.p2.x - l2.p1.x) * (l1.p2.y - l1.p1.y))
     if (denominator === 0) {
       return null
     }
-
-    let ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator
-    let ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator
-
-    // is the intersection along the segments
+    let ua = ((l2.p2.x - l2.p1.x) * (l1.p1.y - l2.p1.y) - (l2.p2.y - l2.p1.y) * (l1.p1.x - l2.p1.x)) / denominator
+    let ub = ((l1.p2.x - l1.p1.x) * (l1.p1.y - l2.p1.y) - (l1.p2.y - l1.p1.y) * (l1.p1.x - l2.p1.x)) / denominator
     if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
       return null
     }
-
-    // Return a object with the x and y coordinates of the intersection
-    let x = x1 + ua * (x2 - x1)
-    let y = y1 + ua * (y2 - y1)
-
+    let x = l1.p1.x + ua * (l1.p2.x - l1.p1.x)
+    let y = l1.p1.y + ua * (l1.p2.y - l1.p1.y)
     return {x, y}
   }
 
@@ -128,43 +122,17 @@ export class PathtestComponent implements OnInit {
     this.mirrorLines.push(ff);
   }
 
-
-
-  getIntersections() {
-
-      let l1: Line = new Line;
-      let l2: Line = new Line;
-      let l3: Line = new Line;
-
-
-      l2.p1.x = this.mirrorPoints[0].x
-      l2.p1.y = this.mirrorPoints[0].y
-      l2.p2.x = this.mirrorPoints[1].x
-      l2.p2.y = this.mirrorPoints[1].y
-
-      this.testLines.push({"x": l2.p1.x,"y": l2.p1.y});
-      this.testLines.push({"x": l2.p2.x,"y": l2.p2.y});
-
-      l1.p1.x = this.mirrorPoints[2].x
-      l1.p1.y = this.mirrorPoints[2].y
-      l1.p2.x = this.mirrorPoints[3].x
-      l1.p2.y = this.mirrorPoints[3].y
-
-      this.testLines.push({"x": l1.p1.x,"y": l1.p1.y});
-      this.testLines.push({"x": l1.p2.x,"y": l1.p2.y});
-
-      l3.p1.x = this.mirrorPoints[4].x
-      l3.p1.y = this.mirrorPoints[4].y
-      l3.p2.x = this.mirrorPoints[5].x
-      l3.p2.y = this.mirrorPoints[5].y
-
-      this.testLines.push({"x": l3.p1.x,"y": l3.p1.y});
-      this.testLines.push({"x": l3.p2.x,"y": l3.p2.y});
-
-      let linesIntersection: Point =  this.interdsect(l1.p1.x,l1.p1.y,l1.p2.x,l1.p2.y,l2.p1.x,l2.p1.y,l2.p2.x,l2.p2.y)
-      let linesIntersection2: Point = this.interdsect(l1.p1.x,l1.p1.y,l1.p2.x,l1.p2.y,l3.p1.x,l3.p1.y,l3.p2.x,l3.p2.y)
-      this.interSection.push(linesIntersection);
-      this.interSection.push(linesIntersection2);
+  getReturnPoints(mirrorLines: Line[], firstLine: Line):Point[]{
+    let returnPoints: Point[] = [];
+    if (mirrorLines.length < 2) {
+      return null;
+    }
+    for (let index = 1; index < mirrorLines.length; index++) {
+      let newPoint: Point = this.intersect(mirrorLines[index - 1],mirrorLines[index]);
+      returnPoints.push(newPoint);
+    }
+    returnPoints.push(this.getPerpendicularEndPoint(firstLine, firstLine.p2.width));
+    return returnPoints;
   }
 
   extendAbscissa(line: Line, viewBoxHeight: number, viewBoxWidth: number): Line {
@@ -193,25 +161,9 @@ export class PathtestComponent implements OnInit {
     return newLine;
   }
 
-  intersect(l1:Line, l2:Line): Point {
-    if ((l1.p1.x === l1.p2.x && l1.p2.x === l1.p2.x) || (l2.p1.x === l2.p2.x && l2.p2.x === l2.p2.x)) {
-      return null
-    }
-    let denominator = ((l2.p2.y - l2.p1.y) * (l1.p2.x - l1.p1.x) - (l2.p2.x - l2.p1.x) * (l1.p2.y - l1.p1.y))
-    if (denominator === 0) {
-      return null
-    }
-    let ua = ((l2.p2.x - l2.p1.x) * (l1.p1.x - l2.p1.y) - (l2.p2.y - l2.p1.y) * (l1.p1.x - l2.p1.x)) / denominator
-    let ub = ((l2.p2.x - l2.p1.x) * (l1.p1.y - l2.p1.y) - (l1.p2.y - l1.p1.y) * (l1.p1.x - l2.p1.x)) / denominator
-    if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
-      return null
-    }
-    let x = l1.p1.x + ua * (l1.p2.x - l1.p1.x)
-    let y = l1.p1.y + ua * (l1.p2.y - l1.p1.y)
-    return {x, y}
-  }
 
-  find90degToLine(line: Line, d: number): Point {
+
+  getPerpendicularEndPoint(line: Line, d: number): Point {
     return {
       x:line.p2.x+d*(line.p1.y-line.p2.y)/Math.sqrt(Math.pow(line.p1.x-line.p2.x,2)+Math.pow(line.p1.y-line.p2.y,2)),
       y:line.p2.y-d*(line.p1.x-line.p2.x)/Math.sqrt(Math.pow(line.p1.x-line.p2.x,2)+Math.pow(line.p1.y-line.p2.y,2))
@@ -228,10 +180,4 @@ class Point {
 class Line {
   p1: Point = new Point;
   p2: Point = new Point;
-}
-
-class Triangle {
-  A: Point;
-  B: Point;
-  C: Point;
 }
