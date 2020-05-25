@@ -1,16 +1,18 @@
 :host {
     position: relative;
+    --size: 330px;
+    --colorrr: gba(41, 62, 180, 0.245)
 }
 span {
     position: absolute;
-    left: 200px;
-    top: 200px;
+    left: var(--size);
+    top: var(--size);
     transform: translate(-50%,-50%);
     text-transform: uppercase;
     letter-spacing: 1px;
     font-family: Verdana;
     font-weight: 800;
-    font-size: 0.75rem;
+    font-size: calc(var(--size) / 12);
     background-image: linear-gradient(45deg, rgba(53, 39, 204, 0.548) 0%, rgba(28, 83, 201, 0.452) 100%);
     background-clip: text;
     color:transparent;
@@ -24,33 +26,34 @@ span {
 }
 div:nth-child(1) {
     position: absolute;
-    left: 100px;
-    top: 100px;
-    width: 200px;
-    height: 200px;
+    left: calc(var(--size) / 2 );
+    top: calc(var(--size) / 2 );
+    width: var(--size);
+    height: var(--size);
     border-radius: 53% 46% 52% 47% / 55% 48% 53% 47%;
     background-image: linear-gradient(45deg, rgba(40, 32, 129, 0.329) 0%, rgba(28, 83, 201, 0.24) 100%);
     animation: change-border 2s linear forwards infinite;
 }
 div:nth-child(2) {
     position: absolute;
-    left: 100px;
-    top: 100px;
-    width: 203px;
-    height: 194px;
+    left: calc(var(--size) / 2 );
+    top: calc(var(--size) / 2 );
+    width: calc(var(--size) + 3px);
+    height: calc(var(--size) - 6px);
     border-radius: 53% 46% 52% 47% / 55% 48% 53% 47%;
     background-image: linear-gradient(45deg, rgba(62, 63, 163, 0.3) 0%, rgba(41, 62, 180, 0.245) 100%);
     animation: change-border 2.9s linear forwards infinite;
 }
 .middle {
     position: absolute;
-    left: 110px;
-    top: 110px;
-    width: 180px;
-    height: 180px;
+    left: calc(var(--size) / 2 + var(--size) / 20);
+    top: calc(var(--size) / 2 + var(--size) / 20);
+    width: calc(var(--size) - var(--size) / 10);
+    height: calc(var(--size) - var(--size) / 10);
     border-radius: 51% 49% 49% 46% / 49% 51% 50% 47%;
     background-color: white;
     animation: change-white 8.6s linear forwards infinite;
+    background-color: var(--Main-BG-Color);
 }
 
 @keyframes change-border {
