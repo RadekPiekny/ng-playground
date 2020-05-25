@@ -5,7 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ImageSelectionComponent } from './image-selection/image-selection.component';
 import { PathtestComponent } from './pathtest/pathtest.component';
 import { CryptoVolumeComponent } from './crypto-volume/crypto-volume.component';
 import { ThreeJSComponent } from './three-js/three-js.component';
@@ -22,7 +21,6 @@ import { AbscissaLineConvertorComponent } from './abscissa-line-convertor/abscis
 @NgModule({
   declarations: [
     AppComponent,
-    ImageSelectionComponent,
     PathtestComponent,
     CryptoVolumeComponent,
     ThreeJSComponent,

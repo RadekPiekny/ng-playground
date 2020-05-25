@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ImageSelectionComponent } from './image-selection/image-selection.component';
 import { PathtestComponent } from './pathtest/pathtest.component';
 import { CryptoVolumeComponent } from './crypto-volume/crypto-volume.component';
 import { ThreeJSComponent } from './three-js/three-js.component';
@@ -14,7 +13,6 @@ import { AbscissaLineConvertorComponent } from './abscissa-line-convertor/abscis
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'bla', component: ImageSelectionComponent },
   { path: 'path', component: PathtestComponent },
   { path: 'crypto', component: CryptoVolumeComponent },
   { path: 'threeJS', component: ThreeJSComponent },

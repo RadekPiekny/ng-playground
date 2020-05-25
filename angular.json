@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/ng-playground",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -50,6 +51,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -132,5 +137,8 @@
       }
     }
   },
-  "defaultProject": "ng-playground"
+  "defaultProject": "ng-playground",
+  "cli": {
+    "analytics": "ea5ea594-4be7-4ae1-9bf5-e3219be1748e"
+  }
 }
