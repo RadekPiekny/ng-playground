@@ -34,3 +34,4 @@
 <main [attr.data-theme]="getTheme()">
   <router-outlet></router-outlet>
 </main>
+<app-modal *ngIf="modalService.state"></app-modal>

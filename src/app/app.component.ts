@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ModalService } from './service/modal.service'
 
 @Component({
   selector: 'app-root',
@@ -7,6 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   darkMode: boolean;
+
+  constructor(public modalService: ModalService) {}
+
   changeMode(darkMode: boolean) {
     this.darkMode = darkMode;
   }
