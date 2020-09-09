@@ -1,0 +1,7 @@
+<svg width="300" height="300" viewBox="0 0 300 300">
+    <circle [attr.cx]="pointOne.x" [attr.cy]="pointOne.y" r="10" fill="red" />
+    <circle [attr.cx]="pointTwo.x" [attr.cy]="pointTwo.y" r="10" fill="red" />
+    <circle *ngIf="resultPoint" [attr.cx]="resultPoint.x" [attr.cy]="resultPoint.y" r="10" fill="red" />
+</svg>
+<input type="range" min="0" max="1" step="0.001" value="0" (input)="test($event)">
+{{t}}

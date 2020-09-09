@@ -17,6 +17,7 @@ import { AngleShapeComponent } from './angle-shape/angle-shape.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AbscissaLineConvertorComponent } from './abscissa-line-convertor/abscissa-line-convertor.component';
 import { ModalComponent } from './modal/modal.component';
+import { BezierComponent } from './bezier/bezier.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { ModalComponent } from './modal/modal.component';
     RangeSliderComponent,
     AngleShapeComponent,
     AbscissaLineConvertorComponent,
-    ModalComponent
+    ModalComponent,
+    BezierComponent
   ],
   imports: [
     BrowserModule,
