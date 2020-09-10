@@ -15,6 +15,8 @@ export class BezierComponent implements OnInit {
   visibleLine: ILine[] = [];
   visiblePath: string = "";
   t: number;
+  mouseCursor: IPoint;
+  pathLength: number;
 
   @ViewChild('resultPath') resultPath: ElementRef;
 
@@ -54,8 +56,11 @@ export class BezierComponent implements OnInit {
   test(e: Event) {
     this.t = (e.target as HTMLInputElement).valueAsNumber
     this.ff(this.t);
-    let wtf = (this.resultPath.nativeElement as SVGGeometryElement).getTotalLength();
-    console.log(wtf);
+    this.pathLength = (this.resultPath.nativeElement as SVGGeometryElement).getTotalLength();
+  }
+
+  mouseMove(e: MouseEvent) {
+    this.mouseCursor = {x: e.x, y: e.y};
   }
 
 }

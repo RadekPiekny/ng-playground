@@ -1,8 +1,17 @@
-<svg width="500" height="300" viewBox="0 0 500 300">
+<svg width="500" height="300" viewBox="0 0 500 300" (mousemove)="mouseMove($event)">
     <circle *ngFor="let p of point" [attr.cx]="p.x" [attr.cy]="p.y" r="10" fill="red" />
     <circle *ngFor="let p of visiblePoint" [attr.cx]="p.x" [attr.cy]="p.y" r="10" fill="red" />
     <line *ngFor="let l of visibleLine" [attr.x1]="l.p0.x" [attr.y1]="l.p0.y" [attr.x2]="l.p1.x" [attr.y2]="l.p1.y" stroke="black"/>
     <path #resultPath [attr.d]="visiblePath" stroke="red" stroke-width="3" fill="none"/>
 </svg>
 <input type="range" min="0" max="1" step="0.001" value="0" (input)="test($event)">
-{{t}}
+<div style="display: flex; flex-direction: column;">
+    <span>t: {{t}}</span>
+    <span>length: {{pathLength}}</span>
+</div>
+
+<div style="display: flex; flex-direction: column;" *ngIf="mouseCursor">
+    <span>x: {{mouseCursor.x}}</span>
+    <span>y: {{mouseCursor.y}}</span>
+    <span>t * pathLength: {{pathLength * t * t}}</span>
+</div>
