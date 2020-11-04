@@ -18,7 +18,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AbscissaLineConvertorComponent } from './abscissa-line-convertor/abscissa-line-convertor.component';
 import { ModalComponent } from './modal/modal.component';
 import { BezierComponent } from './bezier/bezier.component';
-
+import { EngineComponent } from './engine/engine.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,8 @@ import { BezierComponent } from './bezier/bezier.component';
     AngleShapeComponent,
     AbscissaLineConvertorComponent,
     ModalComponent,
-    BezierComponent
+    BezierComponent,
+    EngineComponent
   ],
   imports: [
     BrowserModule,
