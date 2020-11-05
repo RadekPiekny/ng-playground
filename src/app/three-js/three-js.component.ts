@@ -66,25 +66,23 @@ export class ThreeJSComponent implements OnInit {
     const light = new THREE.AmbientLight(0xff0000, 0.8);
     this.scene.add(light);
     
-    // const pointLight = new THREE.PointLight(0xffffff, 0.9, 1800);
-    // this.scene.add(pointLight);
+    const pointLight = new THREE.PointLight(0xffffff, 0.9, 1800);
+    pointLight.position.set(1, 1, 1);
+    this.scene.add(pointLight);
     const sun = new THREE.DirectionalLight(0xaabbff, 1);
     sun.position.set(0, 300, 0);
-    sun.target.position.set(0, -100, 0);
+    sun.target.position.set(0, 0, 0);
     sun.castShadow = true;
     sun.shadow.mapSize.width = 1024; // default
     sun.shadow.mapSize.height = 1024; // default
     sun.shadow.camera.near = 100; // default
-    sun.shadow.camera.far = 600; // default
+    sun.shadow.camera.far = 1000; // default
     sun.shadow.camera.visible = true;
     this.scene.add(sun);
     this.scene.add(sun.target);
 
     const helper = new THREE.DirectionalLightHelper( sun, 5 );
     this.scene.add( helper );
-
-    const hemi = new THREE.HemisphereLight(0xffeeb1, 0x080820, 4);
-    // this.scene.add(hemi);
 
   }
 
