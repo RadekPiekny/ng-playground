@@ -9,6 +9,7 @@ import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLigh
   styleUrls: ['./three-js.component.css']
 })
 export class ThreeJSComponent implements OnInit {
+  cones: ICone[] = [];
   @ViewChild('canvas', { static: true }) canvas: ElementRef;
   renderer = new THREE.WebGLRenderer();
   scene = new THREE.Scene();
@@ -39,10 +40,18 @@ export class ThreeJSComponent implements OnInit {
   animate(){
     this.cube.rotation.x += 0.01;
     this.cube.rotation.y += 0.01;
+    this.cones.forEach(c => {
+      c.obj.position.x -= 0.01;
+      c.obj.position.z -= 0.01;
+      c.light.position.x -= 0.01;
+      c.light.position.z -= 0.01;
+      c.lightTarget.position.x -= 0.01;
+      c.lightTarget.position.z -= 0.01;
+    });
     this.camera.updateProjectionMatrix();
     this.renderer.render( this.scene, this.camera );
     this.controls.update();
-    
+
     requestAnimationFrame(() => this.animate());
   }
   ff() {
@@ -53,7 +62,7 @@ export class ThreeJSComponent implements OnInit {
     (this.canvas.nativeElement as HTMLDivElement).appendChild( this.renderer.domElement );
     this.cube.position.z = 0;
     this.cube.position.x = 0;
-    this.cube.position.y = 3;
+    this.cube.position.y = 1;
     this.cube.castShadow = true;
     this.scene.add(this.cube);
 
@@ -65,10 +74,7 @@ export class ThreeJSComponent implements OnInit {
     this.camera.position.y = 10;
     const light = new THREE.AmbientLight(0xff0000, 0.8);
     this.scene.add(light);
-    
-    const pointLight = new THREE.PointLight(0xffffff, 0.9, 1800);
-    pointLight.position.set(1, 1, 1);
-    this.scene.add(pointLight);
+
     const sun = new THREE.DirectionalLight(0xaabbff, 1);
     sun.position.set(0, 300, 0);
     sun.target.position.set(0, 0, 0);
@@ -84,7 +90,54 @@ export class ThreeJSComponent implements OnInit {
     const helper = new THREE.DirectionalLightHelper( sun, 5 );
     this.scene.add( helper );
 
+    this.createBulb();
+
   }
 
+  createBulb() {
+    const geometry = new THREE.ConeGeometry( 0.5, 1, 9 );
+    const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+    const cone = new THREE.Mesh( geometry, material );
+    cone.position.set(4, 1, 4);
+    this.scene.add(cone);
 
+    const x = Math.random() * 10;
+    const y = Math.random() * 10;
+    const spotlight = new THREE.SpotLight(
+      0xffffff,
+      0.6,
+      3,
+      this.radFromDegree(30),
+      0.8
+    );
+    spotlight.position.set(4, 1, 4);
+    spotlight.target.position.set(4, 0, 4);
+
+    spotlight.castShadow = true;
+    this.scene.add(spotlight);
+    this.scene.add(spotlight.target);
+
+    const mycone: ICone = {
+      obj: cone,
+      light: spotlight,
+      lightTarget: spotlight.target,
+      x: 4,
+      y: 1,
+      z: 4
+    };
+    this.cones.push(mycone);
+  }
+
+  radFromDegree = (degrees) => degrees * (Math.PI / 180);
+
+
+}
+
+interface ICone {
+  x: number;
+  y: number;
+  z: number;
+  obj: THREE.Mesh;
+  light: THREE.SpotLight;
+  lightTarget: THREE.Object3D;
 }
