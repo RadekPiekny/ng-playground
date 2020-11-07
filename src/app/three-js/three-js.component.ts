@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import { Randomizer } from '../functions/math';
+import { Ocean } from 'three/examples/jsm/misc/Ocean.js';
+import { GUI } from 'three/examples/jsm/libs/dat.gui.module.js';
 
 @Component({
   selector: 'app-three-js',
@@ -10,13 +12,17 @@ import { Randomizer } from '../functions/math';
   styleUrls: ['./three-js.component.css']
 })
 export class ThreeJSComponent implements OnInit {
+  boardSize = 512;
+  ocean: Ocean;
+  lastTime = ( new Date() ).getTime();
+
   cones: ICone[] = [];
-  coneCount = 10;
+  coneCount = 25;
   @ViewChild('canvas', { static: true }) canvas: ElementRef;
   renderer = new THREE.WebGLRenderer();
   scene = new THREE.Scene();
   geometry = new THREE.BoxGeometry( 1, 1, 1 );
-  planeGeometry = new THREE.PlaneGeometry(10, 10, 10);
+  planeGeometry = new THREE.PlaneGeometry(this.boardSize, this.boardSize, this.boardSize);
   planeMaterial = new THREE.MeshPhongMaterial({
     color: 0x6C6C6C,
     side: THREE.DoubleSide,
@@ -43,29 +49,31 @@ export class ThreeJSComponent implements OnInit {
     this.cube.rotation.x += 0.01;
     this.cube.rotation.y += 0.01;
     this.cones.forEach(c => {
-      if (c.obj.position.x > 5) {
+      if (c.obj.position.x > this.boardSize / 2) {
         c.direction = (180 - c.direction) % 360;
         c.xDiff = this.bulbNewXDiff(c.volacity, c.direction);
       }
-      if (c.obj.position.x < -5) {
+      if (c.obj.position.x < -1 * this.boardSize / 2) {
         c.direction = 180 - c.direction;
         c.xDiff = this.bulbNewXDiff(c.volacity, c.direction);
       }
-      if (c.obj.position.z > 5) {
+      if (c.obj.position.z > this.boardSize / 2) {
         c.direction = 270 + 90 - c.direction;
         c.zDiff = this.bulbNewZDiff(c.volacity, c.direction);
       }
-      if (c.obj.position.z < -5) {
+      if (c.obj.position.z < -1 * this.boardSize / 2) {
         c.direction = (90 - (c.direction - 270)) % 360;
         c.zDiff = this.bulbNewZDiff(c.volacity, c.direction);
-        c.obj.position.z = -5;
       }
+      c.obj.rotation.x += 0.01;
+      c.obj.rotation.y += 0.01;
 
       c.obj.position.x += c.xDiff;
       c.obj.position.z += c.zDiff;
       c.light.position.set(c.obj.position.x, c.obj.position.y, c.obj.position.z);
       c.lightTarget.position.set(c.obj.position.x, 0, c.obj.position.z);
     });
+    this.Update();
     this.camera.updateProjectionMatrix();
     this.renderer.render( this.scene, this.camera );
     this.controls.update();
@@ -89,12 +97,12 @@ export class ThreeJSComponent implements OnInit {
     this.plane.receiveShadow = true;
     this.scene.add(this.plane);
     this.camera.position.z = 0;
-    this.camera.position.y = 10;
-    const light = new THREE.AmbientLight(0xff0000, 0.8);
+    this.camera.position.y = 200;
+    const light = new THREE.AmbientLight(0xfffffff, 0.1);
     this.scene.add(light);
 
     const sun = new THREE.DirectionalLight(0xaabbff, 1);
-    sun.position.set(0, 300, 0);
+    sun.position.set(0, 1000, 0);
     sun.target.position.set(0, 0, 0);
     sun.castShadow = true;
     sun.shadow.mapSize.width = 1024; // default
@@ -105,33 +113,35 @@ export class ThreeJSComponent implements OnInit {
     this.scene.add(sun);
     this.scene.add(sun.target);
 
-    const helper = new THREE.DirectionalLightHelper( sun, 5 );
-    this.scene.add( helper );
+    // const helper = new THREE.DirectionalLightHelper( sun, 5 );
+    // this.scene.add( helper );
     for (let i = 0; i < this.coneCount; i++) {
       this.createBulb();
     }
+    this.generateOcean();
 
   }
 
   createBulb() {
-    const x = Randomizer.getRandomIntNegativeNumber(-5, 5);
-    const z = Randomizer.getRandomIntNegativeNumber(-5, 5);
+    const x = Randomizer.getRandomIntNegativeNumber(- this.boardSize / 2, this.boardSize / 2);
+    const z = Randomizer.getRandomIntNegativeNumber(- this.boardSize / 2, this.boardSize / 2);
 
-    const geometry = new THREE.ConeGeometry( 0.5, 0.2, 20 );
-    const cone = new THREE.Mesh( geometry, this.material );
-    cone.position.set(x, 1, z);
+    const geometry = new THREE.TorusKnotBufferGeometry( 10, 3, 64, 16 );
+    const material = new THREE.MeshStandardMaterial( { color: 0x6083c2 } );
+    const cone = new THREE.Mesh( geometry, material );
+    cone.position.set(x, 30, z);
     this.scene.add(cone);
     const spotlight = new THREE.SpotLight(
       0xffffff,
       0.6,
-      3,
+      100,
       this.radFromDegree(30),
       0.8
     );
-    spotlight.position.set(x, 1, z);
+    spotlight.position.set(x, 0, z);
     spotlight.target.position.set(x, 0, z);
 
-    spotlight.castShadow = true;
+    spotlight.castShadow = false;
     this.scene.add(spotlight);
     this.scene.add(spotlight.target);
 
@@ -142,7 +152,7 @@ export class ThreeJSComponent implements OnInit {
       x,
       y: 1,
       z,
-      volacity: Randomizer.getRandomNumber(0.01, 0.1),
+      volacity: Randomizer.getRandomNumber(0.3, 0.8),
       direction: -120
     };
     mycone.xDiff = this.bulbNewXDiff(mycone.volacity, mycone.direction);
@@ -154,6 +164,60 @@ export class ThreeJSComponent implements OnInit {
     c.obj.position.set(x, y, z);
     c.light.position.set(x, y, z);
     c.lightTarget.position.set(x, y, z);
+  }
+
+  generateOcean() {
+    const gsize = 512;
+    const res = 1024;
+    const gres = res / 2;
+    const origx = - gsize / 2;
+    const origz = - gsize / 2;
+    this.ocean = new Ocean( this.renderer, this.camera, this.scene,
+      {
+        USE_HALF_FLOAT: false,
+        INITIAL_SIZE: 512.0,
+        INITIAL_WIND: [ 10.0, 10.0 ],
+        INITIAL_CHOPPINESS: 1.5,
+        CLEAR_COLOR: [ 1.0, 1.0, 1.0, 0.0 ],
+        GEOMETRY_ORIGIN: [ origx, origz ],
+        SUN_DIRECTION: [ - 1.0, 1.0, 1.0 ],
+        OCEAN_COLOR: new THREE.Vector3( 0.004, 0.016, 0.047 ),
+        SKY_COLOR: new THREE.Vector3( 3.2, 9.6, 12.8 ),
+        EXPOSURE: 0.35,
+        GEOMETRY_RESOLUTION: gres,
+        GEOMETRY_SIZE: gsize,
+        RESOLUTION: res
+      } );
+    this.ocean.materialOcean.uniforms.u_projectionMatrix = { value: this.camera.projectionMatrix };
+    this.ocean.materialOcean.uniforms.u_viewMatrix = { value: this.camera.matrixWorldInverse };
+    this.ocean.materialOcean.uniforms.u_cameraPosition = { value: this.camera.position };
+    this.scene.add( this.ocean.oceanMesh );
+  }
+
+  Update() {
+
+    const currentTime = new Date().getTime();
+    this.ocean.deltaTime = ( currentTime - this.lastTime ) / 1000 || 0.0;
+    this.lastTime = currentTime;
+    this.ocean.render( this.ocean.deltaTime );
+    this.ocean.overrideMaterial = this.ocean.materialOcean;
+
+    if ( this.ocean.changed ) {
+
+      this.ocean.materialOcean.uniforms[ "u_size" ].value = this.ocean.size;
+      this.ocean.materialOcean.uniforms[ "u_sunDirection" ].value.set( this.ocean.sunDirectionX, this.ocean.sunDirectionY, this.ocean.sunDirectionZ );
+      this.ocean.materialOcean.uniforms[ "u_exposure" ].value = this.ocean.exposure;
+      this.ocean.changed = false;
+
+    }
+
+    this.ocean.materialOcean.uniforms[ "u_normalMap" ].value = this.ocean.normalMapFramebuffer.texture;
+    this.ocean.materialOcean.uniforms[ "u_displacementMap" ].value = this.ocean.displacementMapFramebuffer.texture;
+    this.ocean.materialOcean.uniforms[ "u_projectionMatrix" ].value = this.camera.projectionMatrix;
+    this.ocean.materialOcean.uniforms[ "u_viewMatrix" ].value = this.camera.matrixWorldInverse;
+    this.ocean.materialOcean.uniforms[ "u_cameraPosition" ].value = this.camera.position;
+    this.ocean.materialOcean.depthTest = true;
+
   }
 
   radFromDegree = (degrees) => degrees * (Math.PI / 180);
