@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild, OnInit } from '
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
+import { Randomizer } from '../functions/math';
 
 @Component({
   selector: 'app-three-js',
@@ -10,6 +11,7 @@ import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLigh
 })
 export class ThreeJSComponent implements OnInit {
   cones: ICone[] = [];
+  coneCount = 10;
   @ViewChild('canvas', { static: true }) canvas: ElementRef;
   renderer = new THREE.WebGLRenderer();
   scene = new THREE.Scene();
@@ -41,12 +43,28 @@ export class ThreeJSComponent implements OnInit {
     this.cube.rotation.x += 0.01;
     this.cube.rotation.y += 0.01;
     this.cones.forEach(c => {
-      c.obj.position.x -= 0.01;
-      c.obj.position.z -= 0.01;
-      c.light.position.x -= 0.01;
-      c.light.position.z -= 0.01;
-      c.lightTarget.position.x -= 0.01;
-      c.lightTarget.position.z -= 0.01;
+      if (c.obj.position.x > 5) {
+        c.direction = (180 - c.direction) % 360;
+        c.xDiff = this.bulbNewXDiff(c.volacity, c.direction);
+      }
+      if (c.obj.position.x < -5) {
+        c.direction = 180 - c.direction;
+        c.xDiff = this.bulbNewXDiff(c.volacity, c.direction);
+      }
+      if (c.obj.position.z > 5) {
+        c.direction = 270 + 90 - c.direction;
+        c.zDiff = this.bulbNewZDiff(c.volacity, c.direction);
+      }
+      if (c.obj.position.z < -5) {
+        c.direction = (90 - (c.direction - 270)) % 360;
+        c.zDiff = this.bulbNewZDiff(c.volacity, c.direction);
+        c.obj.position.z = -5;
+      }
+
+      c.obj.position.x += c.xDiff;
+      c.obj.position.z += c.zDiff;
+      c.light.position.set(c.obj.position.x, c.obj.position.y, c.obj.position.z);
+      c.lightTarget.position.set(c.obj.position.x, 0, c.obj.position.z);
     });
     this.camera.updateProjectionMatrix();
     this.renderer.render( this.scene, this.camera );
@@ -64,13 +82,13 @@ export class ThreeJSComponent implements OnInit {
     this.cube.position.x = 0;
     this.cube.position.y = 1;
     this.cube.castShadow = true;
-    this.scene.add(this.cube);
+    // this.scene.add(this.cube);
 
     this.plane.rotation.x = -90 * Math.PI / 180;
     this.plane.position.y = 0;
     this.plane.receiveShadow = true;
     this.scene.add(this.plane);
-    this.camera.position.z = 10;
+    this.camera.position.z = 0;
     this.camera.position.y = 10;
     const light = new THREE.AmbientLight(0xff0000, 0.8);
     this.scene.add(light);
@@ -89,20 +107,20 @@ export class ThreeJSComponent implements OnInit {
 
     const helper = new THREE.DirectionalLightHelper( sun, 5 );
     this.scene.add( helper );
-
-    this.createBulb();
+    for (let i = 0; i < this.coneCount; i++) {
+      this.createBulb();
+    }
 
   }
 
   createBulb() {
-    const geometry = new THREE.ConeGeometry( 0.5, 1, 9 );
-    const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-    const cone = new THREE.Mesh( geometry, material );
-    cone.position.set(4, 1, 4);
-    this.scene.add(cone);
+    const x = Randomizer.getRandomIntNegativeNumber(-5, 5);
+    const z = Randomizer.getRandomIntNegativeNumber(-5, 5);
 
-    const x = Math.random() * 10;
-    const y = Math.random() * 10;
+    const geometry = new THREE.ConeGeometry( 0.5, 0.2, 20 );
+    const cone = new THREE.Mesh( geometry, this.material );
+    cone.position.set(x, 1, z);
+    this.scene.add(cone);
     const spotlight = new THREE.SpotLight(
       0xffffff,
       0.6,
@@ -110,8 +128,8 @@ export class ThreeJSComponent implements OnInit {
       this.radFromDegree(30),
       0.8
     );
-    spotlight.position.set(4, 1, 4);
-    spotlight.target.position.set(4, 0, 4);
+    spotlight.position.set(x, 1, z);
+    spotlight.target.position.set(x, 0, z);
 
     spotlight.castShadow = true;
     this.scene.add(spotlight);
@@ -121,15 +139,26 @@ export class ThreeJSComponent implements OnInit {
       obj: cone,
       light: spotlight,
       lightTarget: spotlight.target,
-      x: 4,
+      x,
       y: 1,
-      z: 4
+      z,
+      volacity: Randomizer.getRandomNumber(0.01, 0.1),
+      direction: -120
     };
+    mycone.xDiff = this.bulbNewXDiff(mycone.volacity, mycone.direction);
+    mycone.zDiff = this.bulbNewZDiff(mycone.volacity, mycone.direction);
     this.cones.push(mycone);
   }
 
-  radFromDegree = (degrees) => degrees * (Math.PI / 180);
+  newConePosition(c: ICone, x: number, y: number, z: number) {
+    c.obj.position.set(x, y, z);
+    c.light.position.set(x, y, z);
+    c.lightTarget.position.set(x, y, z);
+  }
 
+  radFromDegree = (degrees) => degrees * (Math.PI / 180);
+  bulbNewXDiff = (volacity: number, direction: number) => volacity * Math.cos(this.radFromDegree(direction));
+  bulbNewZDiff = (volacity: number, direction: number) => volacity * Math.sin(this.radFromDegree(direction));
 
 }
 
@@ -140,4 +169,8 @@ interface ICone {
   obj: THREE.Mesh;
   light: THREE.SpotLight;
   lightTarget: THREE.Object3D;
+  volacity: number;
+  direction: number;
+  xDiff?: number;
+  zDiff?: number;
 }
