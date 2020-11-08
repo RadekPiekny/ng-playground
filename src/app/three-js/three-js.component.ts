@@ -73,7 +73,6 @@ export class ThreeJSComponent implements OnInit {
       c.light.position.set(c.obj.position.x, c.obj.position.y, c.obj.position.z);
       c.lightTarget.position.set(c.obj.position.x, 0, c.obj.position.z);
     });
-    this.Update();
     this.camera.updateProjectionMatrix();
     this.renderer.render( this.scene, this.camera );
     this.controls.update();
@@ -118,7 +117,6 @@ export class ThreeJSComponent implements OnInit {
     for (let i = 0; i < this.coneCount; i++) {
       this.createBulb();
     }
-    this.generateOcean();
 
   }
 
@@ -164,60 +162,6 @@ export class ThreeJSComponent implements OnInit {
     c.obj.position.set(x, y, z);
     c.light.position.set(x, y, z);
     c.lightTarget.position.set(x, y, z);
-  }
-
-  generateOcean() {
-    const gsize = 512;
-    const res = 1024;
-    const gres = res / 2;
-    const origx = - gsize / 2;
-    const origz = - gsize / 2;
-    this.ocean = new Ocean( this.renderer, this.camera, this.scene,
-      {
-        USE_HALF_FLOAT: false,
-        INITIAL_SIZE: 512.0,
-        INITIAL_WIND: [ 10.0, 10.0 ],
-        INITIAL_CHOPPINESS: 1.5,
-        CLEAR_COLOR: [ 1.0, 1.0, 1.0, 0.0 ],
-        GEOMETRY_ORIGIN: [ origx, origz ],
-        SUN_DIRECTION: [ - 1.0, 1.0, 1.0 ],
-        OCEAN_COLOR: new THREE.Vector3( 0.004, 0.016, 0.047 ),
-        SKY_COLOR: new THREE.Vector3( 3.2, 9.6, 12.8 ),
-        EXPOSURE: 0.35,
-        GEOMETRY_RESOLUTION: gres,
-        GEOMETRY_SIZE: gsize,
-        RESOLUTION: res
-      } );
-    this.ocean.materialOcean.uniforms.u_projectionMatrix = { value: this.camera.projectionMatrix };
-    this.ocean.materialOcean.uniforms.u_viewMatrix = { value: this.camera.matrixWorldInverse };
-    this.ocean.materialOcean.uniforms.u_cameraPosition = { value: this.camera.position };
-    this.scene.add( this.ocean.oceanMesh );
-  }
-
-  Update() {
-
-    const currentTime = new Date().getTime();
-    this.ocean.deltaTime = ( currentTime - this.lastTime ) / 1000 || 0.0;
-    this.lastTime = currentTime;
-    this.ocean.render( this.ocean.deltaTime );
-    this.ocean.overrideMaterial = this.ocean.materialOcean;
-
-    if ( this.ocean.changed ) {
-
-      this.ocean.materialOcean.uniforms[ "u_size" ].value = this.ocean.size;
-      this.ocean.materialOcean.uniforms[ "u_sunDirection" ].value.set( this.ocean.sunDirectionX, this.ocean.sunDirectionY, this.ocean.sunDirectionZ );
-      this.ocean.materialOcean.uniforms[ "u_exposure" ].value = this.ocean.exposure;
-      this.ocean.changed = false;
-
-    }
-
-    this.ocean.materialOcean.uniforms[ "u_normalMap" ].value = this.ocean.normalMapFramebuffer.texture;
-    this.ocean.materialOcean.uniforms[ "u_displacementMap" ].value = this.ocean.displacementMapFramebuffer.texture;
-    this.ocean.materialOcean.uniforms[ "u_projectionMatrix" ].value = this.camera.projectionMatrix;
-    this.ocean.materialOcean.uniforms[ "u_viewMatrix" ].value = this.camera.matrixWorldInverse;
-    this.ocean.materialOcean.uniforms[ "u_cameraPosition" ].value = this.camera.position;
-    this.ocean.materialOcean.depthTest = true;
-
   }
 
   radFromDegree = (degrees) => degrees * (Math.PI / 180);

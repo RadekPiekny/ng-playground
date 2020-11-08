@@ -1,14 +1,21 @@
 <svg width="500" height="500" viewBox="0 0 500 500">
-  <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
-    <stop offset="30%" style="stop-color:rgba(255,255,255,0.9)" />
-    <stop [attr.offset]="'40%'" style="stop-color:rgba(255,0,0,0.3)" />
-  </linearGradient>
-  <path [attr.d]="getPoints(points)" stroke="black" stroke-width="1" [attr.fill]="'url(#grad)'"/>
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop [attr.offset]="testInput + '%'" style="stop-color:rgba(255,255,255,1)" />
+      <stop [attr.offset]="testInput2 + '%'" style="stop-color:rgba(255,255,255,0.0)" />
+    </linearGradient>
+    <filter id="f1" x="0" y="0" width="200%" height="200%">
+      <feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />
+      <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="10" />
+      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter>
+  </defs>
+  <path [attr.d]="getPoints(points)" stroke="transparent" stroke-width="1" [attr.fill]="'url(#grad)'" [attr.filter]="'url(#f1)'"/>
   <!-- <path [attr.d]="getPoints(testLines)" stroke="rgba(0,0,0,0.2)" stroke-width="10" fill="transparent"/> -->
   <ng-container *ngFor="let line of mirrorLines">
     <path [attr.d]="getLine(line)" stroke="transparent" stroke-width="5" />
   </ng-container>
-  <ng-container *ngFor="let point of interSection">
-    <circle [attr.cx]="point.x" [attr.cy]="point.y" r="10" fill="rgba(0,0,0,0.3)" />
-  </ng-container>
 </svg>
+
+<input type="range" id="volume" name="volume" min="0" max="100" (change)="testInput = $event.target.value">
+<input type="range" id="volume" name="volume" min="0" max="100" (change)="testInput2 = $event.target.value">

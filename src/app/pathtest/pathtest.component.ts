@@ -6,9 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./pathtest.component.css']
 })
 export class PathtestComponent implements OnInit {
+  testInput: number;
+  testInput2: number;
   points: Point[] = [
     { x:80, y: 150 },
-    { x:120, y: 220 },
+    { x:160, y: 220 },
     { x:350, y: 300 },
     { x:350, y: 350 },
     { x:480, y: 480 }
