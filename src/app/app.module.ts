@@ -19,6 +19,7 @@ import { AbscissaLineConvertorComponent } from './abscissa-line-convertor/abscis
 import { ModalComponent } from './modal/modal.component';
 import { BezierComponent } from './bezier/bezier.component';
 import { EngineComponent } from './engine/engine.component';
+import { PathLightningDirective } from './directive/path-lightning.directive';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { EngineComponent } from './engine/engine.component';
     AbscissaLineConvertorComponent,
     ModalComponent,
     BezierComponent,
-    EngineComponent
+    EngineComponent,
+    PathLightningDirective
   ],
   imports: [
     BrowserModule,

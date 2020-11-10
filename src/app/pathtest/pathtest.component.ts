@@ -19,7 +19,7 @@ export class PathtestComponent implements OnInit {
   testLines: Point[] = [];
   mirrorPoints: Point[] = [];
   mirrorLines: Line[] = [];
-  startWidth: number = 20;
+  startWidth: number = 10;
   endWidth: number = 0;
   stepDiffWidth: number;
   testPoint: Point;
@@ -30,7 +30,7 @@ export class PathtestComponent implements OnInit {
     this.points.push(...this.interSection)
   }
 
-  getNarrowingLine(line:Point[],startWidth:number = 20,endWidth:number = 0):Point[] {
+  getNarrowingLine(line:Point[],startWidth:number = 10,endWidth:number = 0):Point[] {
     let stepDiffWidth: number = ( startWidth - endWidth) / (this.points.length - 1);
     line.forEach((p,i) => {
       p.width = this.startWidth - stepDiffWidth * i;
