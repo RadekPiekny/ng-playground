@@ -27,7 +27,10 @@ export class PathtestComponent implements OnInit {
 
   ngOnInit() {
     this.interSection = this.getNarrowingLine(this.points,this.startWidth,this.endWidth);
-    this.points.push(...this.interSection)
+    this.points.push(...this.interSection);
+    this.testLines.forEach(p => {
+      p.
+    })
   }
 
   getNarrowingLine(line:Point[],startWidth:number = 10,endWidth:number = 0):Point[] {

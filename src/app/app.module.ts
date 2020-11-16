@@ -20,6 +20,7 @@ import { ModalComponent } from './modal/modal.component';
 import { BezierComponent } from './bezier/bezier.component';
 import { EngineComponent } from './engine/engine.component';
 import { PathLightningDirective } from './directive/path-lightning.directive';
+import { LightningComponent } from './lightning/lightning.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { PathLightningDirective } from './directive/path-lightning.directive';
     ModalComponent,
     BezierComponent,
     EngineComponent,
-    PathLightningDirective
+    PathLightningDirective,
+    LightningComponent
   ],
   imports: [
     BrowserModule,
